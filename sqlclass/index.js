@@ -1,13 +1,16 @@
 const { faker } = require('@faker-js/faker');
 const mysql = require ('mysql2');
-
+require("dotenv").config();
 
 // connect the file for database (data base ko coonect karne ke liye ye function use kiye jate hai )
+
+
+
 const  connection = mysql.createConnection({
-    hpst: 'localhost',
-    user: ' root',
+    host: 'localhost',
+    user: 'root',
     database: 'delta_app',
-    password:'process.env.DB_PASSWORD' 
+    password: process.env.DB_PASSWORD 
 });
 
 // now data base ko use karne ke liye ya kuch change karne k liye 

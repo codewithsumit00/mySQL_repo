@@ -24,6 +24,8 @@ try {
   console.log(err);
 }
 
+connection.end ();
+
 
 
 

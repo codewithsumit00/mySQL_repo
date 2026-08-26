@@ -23,6 +23,7 @@ let getRandomUser = () => {
 };
 
 let q = "INSERT INTO user (id , username, email, password) VALUES ?";
+
 let data = [];
 for (let i=1; i<=50; i++){
   data.push(getRandomUser()); //fake 100 users generate 
@@ -31,7 +32,7 @@ for (let i=1; i<=50; i++){
 
 try {
     connection.query(q, [data], (err, result) => {
-        if(err) throw err;
+        if (err) throw err;
         console.log(result);
         // console.log("100 users inserted successfully");
     });

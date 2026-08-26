@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "dotenv": "^17.4.2",
+    "mysql2": "^3.24.2"
+  },
+  "name": "newsqldata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "sumit kumar",
+  "license": "ISC",
+  "type": "commonjs"
+}

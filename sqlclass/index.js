@@ -2,6 +2,21 @@ const { faker } = require('@faker-js/faker');
 const mysql = require('mysql2');
 require("dotenv").config();
 
+const express = require("express");
+const app = express();
+const path = require("path");
+const { SERVFAIL } = require('dns');
+
+const methodOverride = require("method-override");
+
+
+
+//ejs create to understand for jason language
+app.set("view engine", "ejs");
+app.set("views",path.join(__dirname, "/views"));
+app.use(methodOverride("_method"));
+app.use(express.urlencoded(({ extended: true } )));
+
 // Connect Node.js with MySQL
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -22,26 +37,92 @@ let getRandomUser = () => {
 
 };
 
-let q = "INSERT INTO user (id , username, email, password) VALUES ?";
 
-let data = [];
-for (let i=1; i<=50; i++){
-  data.push(getRandomUser()); //fake 100 users generate 
+
+//this part used to generate rendom data in database
+// let q = "INSERT INTO user (id , username, email, password) VALUES ?";
+
+// let data = [];
+// for (let i=1; i<=50; i++){
+//   data.push(getRandomUser()); //fake 100 users generate 
   
-}
+// }
 
-try {
-    connection.query(q, [data], (err, result) => {
+
+
+
+
+
+// connection.end();
+
+
+app.get("/", (req ,res) => {
+    
+    let q = `SELECT count(*) FROM user`;
+   
+});
+
+app.get ("/user" , (req , res) =>{
+    let q = `SELECT * FROM user`;
+ try {
+    connection.query(q, (err, users) => {
         if (err) throw err;
-        console.log(result);
-        // console.log("100 users inserted successfully");
+        res.render("showu.ejs", {users});   
     });
 } catch (err) {
     console.log(err);
+    res.send("some error show");
+}
+});
+
+// edit route 
+app.get ("/user/:id/edit", (req, res) => {
+
+    let {id} = req.params;
+    let q = `SELECT * FROM user WHERE id='${id}'`
+try {
+    connection.query(q, (err, result) => {
+        if (err) throw err;
+        let user = result[0];
+        res.render("edit.ejs",{user});   
+    });
+} catch (err) {
+    console.log(err);
+    res.send("some error show");
+}
+});
+
+
+// UPDATE ROUTE IN DATABASE 
+app.patch ("/user/:id" , (req ,res) =>{
+    let {id} = req.params;
+    let { password: formpass, username: newusername} =req.body;
+    let q = `SELECT * FROM user WHERE id='${id}'`;
+    try {
+    connection.query(q, (err, result) => {
+        if (err) throw err;
+        let user = result[0];
+        if (formpass != user.password){
+            res.send("wrong password");
+        } else {
+            let q2 = `UPDATE user SET username='${newusername}' WHERE id='${id}'`;
+            connection.query(q2, (err,result) =>{
+                if (err) throw err;
+                res.redirect("/user");
+            });
+        } 
+        
+    });
+} catch (err) {
+    console.log(err);
+    res.send("some error show");
 }
 
-connection.end();
+});
 
+app.listen("8080",() => {
+    console.log("server is listing to port 8080");
+} );
 
 
 
